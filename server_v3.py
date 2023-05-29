@@ -35,6 +35,6 @@ def predict():
 
     return jsonify({"message": prediction_text})  # Send the prediction result to client
 
-# WSGI Entry Point
-def create_app():
-    return app
+# Start the server
+if __name__ == '__main__':
+    app.run(port=5000)
