@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Image</title>
+</head>
+<body>
+
+<!-- Input element that lets user select a file -->
+<h2>Upload Image:</h2>
+<input type="file" id="imageUpload" accept="image/*">
+
+<!-- Image element to display the uploaded image -->
+<h2>Uploaded Image:</h2>
+<img id="displayImage" style="max-width:500px; max-height:500px;">
+
+<!-- Paragraph element to display the prediction result -->
+<p id="predictionResult">result here!</p>
+
+<script>
+// Get references to the HTML elements
+let imageUpload = document.getElementById('imageUpload');
+let displayImage = document.getElementById('displayImage');
+let predictionResult = document.getElementById('predictionResult');
+
+// Event listener for when a file is selected
+imageUpload.onchange = function(e) {
+    let file = e.target.files[0];  // The selected file
+
+    let formData = new FormData();  // FormData object for sending the file
+    formData.append('file', file);  // Add the file to the FormData object
+
+    // Send the file to the server with a POST request
+    fetch('http://localhost:5000/predict', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())  // Parse the JSON response
+    .then(data => {
+        predictionResult.textContent = data.message;  // Display the prediction result
+    })
+    .catch(error => console.error(error));  // Log any errors
+
+    let reader = new FileReader();  // FileReader for reading the file
+
+    // Event listener for when the file is read
+    reader.onload = function(e) {
+        displayImage.src = e.target.result;  // Display the image
+    };
+
+    reader.readAsDataURL(file);  // Read the file
+};
+</script>
+
+</body>
+</html>
